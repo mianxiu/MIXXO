@@ -102,7 +102,7 @@ function pages() {
     li += r.match(h)[0] + '\r\n'
       + r.match(s)[0] + '\r\n'
       + r.match(s)[1] + '\r\n'
-      + r.match(p)[0]
+     // + r.match(p)[0]
 
     // 拼接<li>
     LI = li.replace(/<h3>/gm, '</li>\r\n<li>\r\n<h3>')

@@ -3,12 +3,12 @@
  * @param {*} fromTags 
  * @param {*} imageTag 图片名前缀，页面图片不会因为缓存错误
  */
-function frontMatter(fromTags,imageTag) {
+function frontMatter(fromTags, imageTag) {
   //读取文件
   //标签匹配正则
   let reg = [
 
-    [/^banner:.*/m, ['<div class="_banner" style="background-image:url('+ imageTag + '_', ');"></div>']],
+    [/^banner:.*/m, ['<div class="_banner" style="background-image:url(' + imageTag + '_', ');"></div>']],
     [/^title:.*/m, ['<h3>', '</h3>']],
     [/^date:.*/m, ['<span class="_date">', '</span>']],
     [/^tags:.*/m, ['<span class="_tags">', '</span>']],
@@ -39,66 +39,89 @@ function frontMatter(fromTags,imageTag) {
  * @param {*} fromText 
  * @param {*} imageTag 图片名前缀，页面图片不会因为缓存错误
  */
-function cover(fromText,imageTag) {
-  let result = ''
+function cover(fromText, imageTag) {
+  let result = fromText
+  let heading, h1, h2, h3, h4, h5, h6, img, link, youtube, p
+  heading = {
+    h1: '^# .+',
+    h2: '^## .+',
+    h3: '^### .+',
+    h4: '^#### .+',
+    h5: '^##### .+',
+    h6: '^###### .+'
+  }
 
-  
-  let img, link,youtube
   img = /\!\[\]\(.+?\)|\!\[.+?\]\(.+?\)/
-  link = /\[.+?\]\(.+?\)/
+  link = /\[(?!<a).+?\]\((?!<a).+?\)(?!\])/
   youtube = /\[youtube:\(.+?\)\]/g
-  fromText.split(/\r\n/).forEach(e => {
-    // 匹配image标签
-    if (img.test(e)) {
-      // result += '<img style="width:100%;" src="' + imageTag + '_' + e.match(img)[0].slice(8, -2) + '">\r\n'
-      let m;
-      let toImg = function(e){
-          if(img.test(e)){
-            let s = imageTag + '_' + e.match(img)[0].match(/\(.+\)/)[0].slice(1,-1)
-            let alt = e.match(img)[0].match(/\[.+\]/)
-            console.log(alt)
-            if(alt !== null){
-              m = e.replace(img, '<img style="" src="' + s + '"'+ 'alt="'+ alt[0].slice(1,-1) +'">')
-            }else{
-              m = e.replace(img, '<img style="" src="' + s + '">')
+  p = /^(?!<).*/
 
-            }
-            // console.log(r)  
-            toImg(m)
-          }
-      }       
-      toImg(e)
-        result += '<p>'+ m + '</p>\r\n' 
-      
+  let loop = function (text) {
+
+    let _heading = function (e) {
+      for (const i in heading) {
+        let r = new RegExp(heading[i], 'm')
+        if (r.test(e)) {
+          let t = '<' + i + '>' + e.match(r)[0].replace(/^#+ +?/, '') + '</' + i + '>\r\n'
+          result = e.replace(r, t)
+          _heading(result)
+        }
+      }
     }
-    // 匹配link标签
+    _heading(text)
+
+
+    let _toImg = function (e) {
+      if (img.test(e)) {
+        let i = e.match(img)[0].split('](')
+        result = e.replace(img, '<img src="' + i[1].slice(0, -1) + '" alt="' + i[0].slice(2) + '">')
+        _toImg(result)
+      }
+    }
+    _toImg(result)
+
+
+    let _toLink = function (e) {
+      if (link.test(e)) {
+        let i = e.match(link)[0].split('](')
+        result = e.replace(link, '<a href="' + i[1].slice(0, -1) + '" target="_blank">' + i[0].slice(1) + '</a>')
+        _toLink(result)
+      }
+    }
+    _toLink(result)
+
+    let _toYoutube = function (e) {
+      if (youtube.test(e)) {
+        result = e.replace(youtube,
+          '<iframe class="_youtube" width="680" height="384" src="https://www.youtube-nocookie.com/embed/'
+          + e.match(youtube)[0].slice(10,-2).split('/').pop()
+          + '?rel=0&amp;showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>')
+        _toYoutube(result)
+      }
+    }
+    _toYoutube(result)
+
+
     
-    else if (link.test(e)) {
-      let r;
-      let toLink = function(e){
-          if(link.test(e)){
-            let s = e.match(link)[0].slice(1,-1).split('](')
-            r = e.replace(link,'<a href="' + s[1] + '" target="_blank">'+ s[0] + '</a>')
-            // console.log(r)  
-            toLink(r)
-          }
-      }       
-        toLink(e)
-        result += '<p>'+ r + '</p>\r\n' 
-    }
-    else if(youtube.test(e)){
-      let y = e.match(youtube)[0].slice(-13,-2)
-      console.log(y)
-      result += '<iframe class="_iframe" width="680" height="384" src="https://www.youtube-nocookie.com/embed/' + y +'?rel=0&amp;showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>'
-    }
-    // 其他文本加<p>
-    else if (e !== '' && (!img.test(e)))
-      result += '<p>' + e + '</p>\r\n'
-  })
+  let _toP = function (e) {
+  
+    e.split('\r\n').forEach(el => {
+    if((p.test(el) || /^<a.*/m.test(el)) && el !==''){
+        result = result.replace(el,'<p>' + el + '</p>')
+      }
+    })
+  }
+  _toP(result)
+  }
 
+
+
+
+  loop(fromText)
+  //console.log(result)
   return result
-}
 
+}
 
 exports.frontMatter = frontMatter
 exports.cover = cover
