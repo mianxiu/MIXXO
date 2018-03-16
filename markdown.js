@@ -41,7 +41,7 @@ function frontMatter(fromTags, imageTag) {
  */
 function cover(fromText, imageTag) {
   let result = fromText
-  let heading, h1, h2, h3, h4, h5, h6, img, link,code , youtube, p
+  let heading, h1, h2, h3, h4, h5, h6, img, link, code, youtube, p
   heading = {
     h1: '^# .+',
     h2: '^## .+',
@@ -53,10 +53,17 @@ function cover(fromText, imageTag) {
 
   img = /\!\[\]\(.+?\)|\!\[.+?\]\(.+?\)/
   link = /\[(?!<a).+?\]\((?!<a).+[^]]?\)(?!\])/
+  ul = /^\- .+\r\n/m
+  ol = /^\d+\. .+\r\n/m
+  del = /~~.+?~~/m
+  blod = /\*\*.+?\*\*/m
+  italics = /\*.+?\*/m
+  blockquote = /^>.+/m
   youtube = /\[youtube:\(.+?\)\]/g
   code = /`+.+?`+/g
   codePre = /^```$/m
   p = /^(?!<[^a])[^\r\n].*/gm
+
 
   let loop = function (text) {
 
@@ -64,7 +71,7 @@ function cover(fromText, imageTag) {
       for (const i in heading) {
         let r = new RegExp(heading[i], 'm')
         if (r.test(e)) {
-          let t = '<' + i + '>' + e.match(r)[0].replace(/^#+ +?/, '') + '</' + i + '>\r\n'
+          let t = '<' + i + '>' + e.match(r)[0].replace(/^#+ +?/, '') + '</' + i + '>'
           result = e.replace(r, t)
           _heading(result)
         }
@@ -92,29 +99,117 @@ function cover(fromText, imageTag) {
     }
     _toLink(result)
 
-    let _toCodePre = function (e) {
-      let p = e.match(/^```$/gm)
-      for(let i=1;i<p.length+1;i++){
-        if(i%2 !== 0){
-          result = result.replace(codePre,'<pre>')
-        }else{
-          result = result.replace(codePre,'</pre>')      
+    let _toList = function (e) {
+      let _toUl = function (e) {
+        if (ul.test(e)) {
+          result = e.replace(ul, e.match(ul)[0].replace(/\r\n(?!(^\r\n))/m, '<%-ul-%>'))
+          _toUl(result)
+          //debugger  
         }
-      }     
+      }
+      _toUl(e)
+
+      let ulreg = /- .+?\<%\-ul\-%><%\-ul\-%>/
+      let _toUlLoop = function (e) {
+        if (ulreg.test(e)) {
+          result = e.replace(ulreg, '<ul>' + e.match(ulreg)[0].slice(0, -8)
+            .replace(/- /g, '<li>')
+            .replace(/<%-ul-%>/g, '</li>')
+            + '</ul>\r\n')
+          _toUlLoop(result)
+        }
+      }
+      _toUlLoop(result)
+      result = result.replace(/<%-ul-%>/g, '\r\n')
+    }
+    _toList(result)
+
+
+
+    
+    let _toList2 = function (e) {
+      let _toOl = function (e) {
+        if (ol.test(e)) {
+          result = e.replace(ol, e.match(ol)[0].replace(/\r\n(?!(^\r\n))/m, '<%-ol-%>'))
+          _toOl(result)
+          //debugger  
+        }
+      }
+      _toOl(e)
+
+      let olreg = /\d+\. .+?\<%\-ol\-%><%\-ol\-%>/
+      let _toOlLoop = function (e) {
+        if (olreg.test(e)) {
+          result = e.replace(olreg, '<ol>' + e.match(olreg)[0].slice(0, -8)
+            .replace(/\d+\. /g, '<li>')
+            .replace(/<%-ol-%>/g, '</li>')
+            + '</ol>\r\n')
+          _toOlLoop(result)
+        }
+      }
+      _toOlLoop(result)
+      result = result.replace(/<%-ol-%>/g, '\r\n')
+    }
+    _toList2(result)
+
+    let _toDel = function (e) {
+      if (del.test(result)) {
+        result = result.replace(del, '<s>' + result.match(del)[0].slice(2, -2) + '</s>')
+        _toDel(result)
+      }
+    }
+    _toDel(result)
+
+    let _toBold = function (e) {
+      if (blod.test(result)) {
+        result = result.replace(blod, '<b>' + result.match(blod)[0].slice(2, -2) + '</b>')
+        _toBold(result)
+      }
+    }
+    _toBold(result)
+
+    let _toItalics = function (e) {
+      if (italics.test(result)) {
+        result = result.replace(italics, '<em>' + result.match(italics)[0].slice(1, -1) + '</em>')
+        _toItalics(result)
+      }
+    }
+    _toItalics(result)
+
+    let _toBlockQuote = function (e) {
+      if (blockquote.test(e)) {
+        result = result.replace(blockquote, '<blockquote>' + e.match(blockquote)[0] + '</blockquote>')
+        _toBlockQuote(result)
+      }
+    }
+    _toBlockQuote(result)
+
+    let _toCodePre = function (e) {
+      if(codePre.test(e)){
+        let p = e.match(/^```$/gm)
+        for (let i = 1; i < p.length + 1; i++) {
+          if (i % 2 !== 0) {
+            result = result.replace(codePre, '<pre>')
+          } else {
+            result = result.replace(codePre, '</pre>')
+          }
+        }
+      } 
     }
     _toCodePre(result)
 
+
     let _toCode = function (e) {
       if (code.test(e)) {
-        e.match(code).forEach(c=>{         
-          result = result.replace(c, '<code>' + c.slice(1,-1) + '</code>')    
-        })          
+        e.match(code).forEach(c => {
+          result = result.replace(c, '<code>' + c.slice(1, -1) + '</code>')
+        })
       }
     }
     _toCode(result)
 
-    
 
+    // 转youtube
     let _toYoutube = function (e) {
       if (youtube.test(e)) {
         result = e.replace(youtube,
@@ -126,45 +221,58 @@ function cover(fromText, imageTag) {
     }
     _toYoutube(result)
 
- // 
-    let _toP = function (e) {
+    // 
+    let _toAnother = function (e) {
       let r = ''
-      e.split('\r\n').forEach(el=>{
-        if(el!==''){
+      e.split('\r\n').forEach(el => {
+        if (el !== '') {
           r += el + '<%-br-%>'
         }
       })
 
       let pre = /<pre>.+?<\/pre>/mg
       let preAry = []
-      r.match(pre).forEach(e=>{
-        preAry.push(e)
-      })
-      r = r.replace(new RegExp(pre),'<%-pre-%>')
-      r = r.replace(/\<%-br-%\>/g,'\r\n')
-
-      if(p.test(r)){
-        r.match(p).forEach(e=>{
-          if(!/^<[^a].+>/m.test(e)){
-            r = r.replace(e,'<p>' + e + '</p>')
-          }  
+      if(pre.test(r)){
+        r.match(pre).forEach(e => {
+          preAry.push(e)
         })
       }
-
-      preAry.forEach(e=>{
-        r = r.replace(/\<%-pre-%\>/,'<pre>'
-        +e.slice(5,-6).replace(/<(?!%)/g,'&lt;')
-        +'</pre>')
-        r = r.replace(/\<%-br-%\>/g,'\r\n')
-      })
       
-      console.log(preAry)
-      console.log(r)
+      
+      
+      r = r.replace(new RegExp(pre), '<%-pre-%>')
+      r = r.replace(/\<%-br-%\>/g, '\r\n')
+
+
+      let _toP = function (e) {
+        let pAry = []
+        if (p.test(e)) {
+          e.match(p).forEach(el => {
+            pAry.push(el)
+          })
+          r = e.replace(p, '<%-p-%>')
+        }
+        //debugger
+        for (let i = 0; i < pAry.length; i++) {
+          r = r.replace(/\<%\-p-\%\>/m, '<p>' + pAry[i] + '</p>')
+        }
+      }
+      _toP(r)
+
+
+
+      preAry.forEach(e => {
+        r = r.replace(/\<%-pre-%\>/, '<pre>'
+          + e.slice(5, -6).replace(/<(?!%)/g, '&lt;')
+          + '</pre>')
+        r = r.replace(/\<%-br-%\>/g, '\r\n')
+      })
       result = r
     }
-    _toP(result)
+    _toAnother(result)
+
     
-}
+  }
 
 
   loop(fromText)
