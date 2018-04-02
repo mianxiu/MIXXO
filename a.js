@@ -15,8 +15,6 @@ let config = JSON.parse(fs.readFileSync('./config.json', 'utf-8'))
 dirSync.rmdirSyncloop(config._publicEssayPath)
 
 
-
-
 /** 
  * md转html
  * 路径默认是config.json的_essayPath
@@ -102,7 +100,7 @@ function pages() {
     li += r.match(h)[0] + '\r\n'
       + r.match(s)[0] + '\r\n'
       + r.match(s)[1] + '\r\n'
-     // + r.match(p)[0]
+
 
     // 拼接<li>
     LI = li.replace(/<h3>/gm, '</li>\r\n<li>\r\n<h3>')
@@ -166,6 +164,48 @@ function copyImage() {
       }
     }
   })
-
 }
 copyImage()
+
+// 复制music
+function pushMusic (){
+  
+  let musicAry =  dirSync.loop('./source/_post/_music','file')
+  let musicAryMtimeMs = []
+  let playListAry = []
+  musicAry.forEach(e=>{
+    // 写入歌曲的修改日期时间戳
+    let ms = fs.statSync(e).mtimeMs
+    musicAryMtimeMs.push(ms)
+
+    let fileName = e.split('/')[4].slice(0,-4)
+    let writePath = './public/music/'+ fileName + '.mp3'
+    playListAry.push('<li>' + fileName + '</li>') 
+
+    if(!fs.existsSync(writePath)){
+      fs.writeFileSync(writePath,fs.readFileSync(e))
+    }
+  })
+
+  // 根据修改日期排序
+  let playListContext = ''
+  let sortMusicAryMtimeMs = musicAryMtimeMs
+  let copyPlayListAry = playListAry
+  let sortPlayList = function (){
+    if(sortMusicAryMtimeMs.length > 0){
+      let index = sortMusicAryMtimeMs.indexOf(Math.max(...sortMusicAryMtimeMs))
+      playListContext += playListAry[index]+'\r\n'
+      // 删除最大值
+      sortMusicAryMtimeMs.splice(index,1)
+      copyPlayListAry.splice(index,1)
+
+      sortPlayList()
+    }
+  }
+  sortPlayList()
+  
+  let r = fs.readFileSync('./source/_layout/index.layout','utf-8').replace(/<%-playList-%>/mg,playListContext)
+  fs.writeFileSync('./public/index.html',r)
+
+}
+pushMusic()
