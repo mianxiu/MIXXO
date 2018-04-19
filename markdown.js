@@ -7,7 +7,6 @@ function frontMatter(fromTags, imageTag) {
   //读取文件
   //标签匹配正则
   let reg = [
-
     [/^banner:.*/m, ['<div class="_banner" style="background-image:url(' + imageTag + '_', ');"></div>']],
     [/^title:.*/m, ['<h3>', '</h3>']],
     [/^date:.*/m, ['<span class="_date">', '</span>']],
@@ -27,6 +26,12 @@ function frontMatter(fromTags, imageTag) {
       }
     }
   }
+  let dateRegex = /\d.+\/\d.+\/\d.+?/gm
+  let options = {
+    year: "numeric", month: "short",
+    day: "numeric"
+}
+  m = m.replace(dateRegex,new Date(m.match(dateRegex)[0].replace(/\//,',')).toLocaleTimeString('en-us',options))
   return m
 }
 

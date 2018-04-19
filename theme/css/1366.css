@@ -505,7 +505,7 @@ margin-top: 12px;
 }
 #essayLeft li{
     list-style: none; 
-    padding-bottom: 10px;
+    padding-bottom: 22px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.03);
     
 }
@@ -539,13 +539,13 @@ margin-top: 12px;
     background-color:rgb(241, 241, 241)
 }
 
-._iframe{
+._youtube{
     border-radius:6px;
     background-color:rgb(241, 241, 241)
 }
 
 ._date,._updated{
-    letter-spacing: 5px;
+    letter-spacing: 2px;
 }
 ._date,._tags,._updated{
     font-size: 14px;
