@@ -1,3 +1,4 @@
+banner:2.jpg
 title:We’re a bunch of no name slumps
 date:2017/12/16
 tags:记50天

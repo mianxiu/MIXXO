@@ -42,7 +42,7 @@ function converHtml(_postFile) {
   let M = markdown.cover(_readData[1],_postFile)
 
   // 3.写入文件
-  fs.writeFileSync(outPutPath + '/' + 'context.html', T + M)
+  fs.writeFileSync(outPutPath + '/' + 'context.html', T + '<div class="essay-context">'+M+'</div>')
   fs.writeFileSync(outPutPath + '/index.html', fs.readFileSync('./source/_layout/essayIndex.layout', 'utf-8'))
 
 
@@ -68,8 +68,6 @@ fs.readdirSync(config._postEssayPath).forEach(e => {
 })
 
 
-
-
 function pages() {
   // 遍历文件获取路径
   let pageNumLi = ''
@@ -89,7 +87,8 @@ function pages() {
   let LI = ''
   let li = ''
   let r
-  let h, s, p
+  let b,h, s, p
+  b = /<div class="_banner" style="background-image:url\(.+?\)/gm
   h = /<h3.*/
   s = /<span.*/gm
   p = /<p.*/m
@@ -97,15 +96,29 @@ function pages() {
     // 获取tag
     r = fs.readFileSync(publicEssayFilePath[i], 'utf-8')
     // 写入tag
-    li += r.match(h)[0] + '\r\n'
+    if(b.test(r)) {
+      // 预览图
+      li += '<div class="preview-img" style="background-image:url\(\'' + publicEssayFilePath[i].replace(/context\.html|\.\/public/g,'') + r.match(b)[0].replace(/<div class="_banner" style="background-image:url\(\'/gm,'')+'"></div>'
+      +'<span>'
+      + r.match(h)[0] + '\r\n'
       + r.match(s)[0] + '\r\n'
       + r.match(s)[1] + '\r\n'
+      + '</span>'
+    }else{
+      li+='<div>'
+      + r.match(h)[0] + '\r\n'
+      + r.match(s)[0] + '\r\n'
+      + r.match(s)[1] + '\r\n'
+      + '</div>'
+    }
+      
 
 
     // 拼接<li>
-    LI = li.replace(/<h3>/gm, '</li>\r\n<li>\r\n<h3>')
+    LI = li.replace(/<div/gm, '</li>\r\n<li>\r\n<div')
     // 按每页大小写入
-    // 让分页从1计数
+    // 让分页从1计\
+    
     if (i + 1 > pageLiNum * pageNum - 1 || i + 1 == publicEssayFilePath.length) {
       dirSync.createDirs('./public/essay/pages/' + pageNum + '/')
       fs.writeFileSync('./public/essay/pages/' + pageNum + '/index.html', LI.slice(5) + '</li>')
