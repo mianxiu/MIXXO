@@ -91,7 +91,7 @@ function pages() {
   b = /<div class="_banner" style="background-image:url\(.+?\)/gm
   h = /<h3.*/
   s = /<span.*/gm
-  p = /<p.*/m
+  p = /<p.*/m //摘要
   for (let i = 0; i < publicEssayFilePath.length; i++) {
     // 获取tag
     r = fs.readFileSync(publicEssayFilePath[i], 'utf-8')
@@ -100,15 +100,17 @@ function pages() {
       // 预览图
       li += '<div class="preview-img" style="background-image:url\(\'' + publicEssayFilePath[i].replace(/context\.html|\.\/public/g,'') + r.match(b)[0].replace(/<div class="_banner" style="background-image:url\(\'/gm,'')+'"></div>'
       +'<span>'
-      + r.match(h)[0] + '\r\n'
       + r.match(s)[0] + '\r\n'
       + r.match(s)[1] + '\r\n'
+      + r.match(h)[0] + '\r\n'
+      //+'<span class="summary">' + r.match(p)[0] + '</span>\r\n'
       + '</span>'
     }else{
       li+='<div>'
-      + r.match(h)[0] + '\r\n'
       + r.match(s)[0] + '\r\n'
       + r.match(s)[1] + '\r\n'
+      + r.match(h)[0] + '\r\n' 
+     // +'<span class="summary">' + r.match(p)[0] + '</span>\r\n'
       + '</div>'
     }
       

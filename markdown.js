@@ -68,6 +68,7 @@ function cover(fromText, imageTag) {
   code = /`+.+?`+/g
   codePre = /^```$/m
   p = /^(?!<[^a])[^\r\n].*/gm
+  line = /^\*\*\*+$|^\-\-\-+$|^\_\_\_+$/gm
 
 
   let loop = function (text) {
@@ -94,6 +95,12 @@ function cover(fromText, imageTag) {
     }
     _toImg(result)
 
+    let _toLine = function(e){
+      if(line.test(e)){
+        result = e.replace(line,'<hr color="#f9f9f9">')
+      }
+    }
+    _toLine(result)
 
     let _toLink = function (e) {
       if (link.test(e)) {
@@ -247,8 +254,6 @@ function cover(fromText, imageTag) {
       
       r = r.replace(new RegExp(pre), '<%-pre-%>')
       r = r.replace(/\<%-br-%\>/g, '\r\n')
-
-
       let _toP = function (e) {
         let pAry = []
         if (p.test(e)) {
@@ -264,7 +269,7 @@ function cover(fromText, imageTag) {
       }
       _toP(r)
 
-
+      
 
       preAry.forEach(e => {
         r = r.replace(/\<%-pre-%\>/, '<pre>'
