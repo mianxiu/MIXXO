@@ -1,7 +1,7 @@
 @import url('./markdown.css');
 @media(min-width:1920px){
     html{
-        font-size: 160px!important;
+        font-size: 140px!important;
     }
 }
 
@@ -13,12 +13,14 @@
 
 html{
     font-size: 100px;
+    text-rendering: optimizeLegibility;
 }
 html,body{  
-    font-family:"Microsoft YaHei","微软雅黑",sans-serif;    
+    font-family:"Microsoft JhengHei","Microsoft YaHei","微软雅黑",sans-serif;    
     background-color: white;
     height: 100%;
     margin: 0 0;  
+    
 }
 hr{
     margin: 0.4rem 0rem;
@@ -207,6 +209,7 @@ margin-top: 0.12rem;
 }
 #name{
     margin-top: 0.24rem;
+    font-weight: bold;
 }
 #year{
     margin-top: 0.15rem;
@@ -488,7 +491,7 @@ margin-top: 0.12rem;
     position: absolute;
     transform: rotate(90deg) translateZ(0);
     margin-top: 0.82rem;
-    margin-left: 10.15rem
+    margin-left: 10.35rem
 }
 #lastPost span:nth-child(1){
     font-size: 0.16rem;
@@ -497,7 +500,22 @@ margin-top: 0.12rem;
 #lastPost span:nth-child(3){
     opacity: 0.1
 }
+#lastPost > span:nth-child(3){
+    width: 2rem;
+    display: block;
+    position: absolute;
+}
 
+#lastPost::before {
+    content: '';
+    display:inline-block;
+    width: .20rem;
+    height: .10rem;
+    background-color: red;
+    position: absolute;
+    margin-left: -.20rem;
+    margin-top: -.20rem
+}
 /**/
 /**/
 #allContext{
@@ -532,7 +550,7 @@ margin-top: 0.12rem;
 #essayLeft li{
     font-size: 0.14rem;
     list-style: none; 
-    padding-bottom: 0.30rem;
+    padding-bottom: 0.28rem;
     border-bottom: 0.01rem solid rgba(0, 0, 0, 0.03);
     margin-bottom:0.30rem;
     
@@ -545,8 +563,9 @@ margin-top: 0.12rem;
     display: flex;
 }
 #essayLeft > ul > li h3{
-    margin-top: 0.2em;
-    margin-bottom: 0.2em;
+    line-height: .28rem;
+    margin-top: 0.3em;
+    margin-bottom: 0em;
 }
 #essayLeft > ul > li:hover h3 {
     
@@ -562,7 +581,7 @@ margin-top: 0.12rem;
     margin-top: 0.40rem;
 }
 .essay-title {
-    font-size:0.28rem;
+    font-size:0.24rem;
     letter-spacing:0rem;
     cursor: pointer;
     margin-top: 0;
@@ -715,6 +734,7 @@ margin-top: 0.12rem;
     flex-direction: row;
     opacity: 1;
     transition: opacity 0.5s;
+    margin: 0.2rem 0 0.2rem 0;
 }
 
 .onPage{
@@ -752,3 +772,70 @@ margin-top: 0.12rem;
 }
 
 
+/*gallery*/
+@media screen and (min-width: 1600px){
+    #gallery{ column-count: 4!important;}
+}
+@media screen and (min-width: 1800px){
+    #gallery{ column-count: 5!important;}
+}
+#gallery{
+    min-height: 3.45rem;
+    background-color: rgb(255, 255, 255);
+    display: block;
+    flex-direction: row;
+    flex-wrap: wrap;
+    font-size: 0;
+    max-width: 2000px;
+    min-width: 10.92rem;
+    padding-top: 0.2rem;
+    position: absolute;
+    column-count: 3;
+    column-gap: 20px;
+}
+.gallery-preview{
+    outline: none!important;
+    width: 100%;
+    
+}
+.gallery-link{
+    cursor: zoom-in;
+    display:inline-block;
+    margin-bottom: 20px;
+    position: relative;
+    box-shadow: 0 0 0px 1px #f6f6f6;
+}
+.gallery-overlay{
+    display: block;
+    background-color: rgba(0, 0, 0, 0.445);
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    transition: opacity 0.2s;
+    position: absolute;
+}
+.gallery-link:hover > div.gallery-overlay{
+    opacity: 1;
+}
+
+.gallery-text{
+    color: white;
+    display: block;
+    height: 20px;
+    font-size: 20px;
+    font-weight: lighter;
+    padding: .40rem .40rem;
+    text-align: left;
+}
+
+.gallery-num{
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-color: rgba(0, 0, 0, 0.44);
+    position: absolute;
+    font-size: 14px;
+    color: #ffffffb3;
+    padding: 4px 4px;
+    text-align: center;
+}
