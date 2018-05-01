@@ -1,8 +1,28 @@
 @import url('./markdown.css');
-@media(min-width:1920px){
-    html{
-        font-size: 140px!important;
-    }
+
+@media screen and (min-width: 1600px){
+    html{ font-size: 120px!important;}
+}
+@media screen and (min-width: 1800px){
+   html{ font-size: 130px!important;}
+}
+@media screen and (min-width: 2000px){
+    html{ font-size: 140px!important;}
+}
+ @media screen and (min-width:2200px){
+    html{ font-size: 150px!important;}
+}
+ @media screen and (min-width:2500px){
+    html{ font-size: 170px!important;}
+}
+ @media screen and (min-width:2800px){
+    html{ font-size: 190px!important;}
+}
+ @media screen and (min-width:3200px){
+    html{ font-size: 220px!important;}
+}
+ @media screen and (min-width:4000px){
+    html{ font-size: 270px!important;}
 }
 
 /* 1366X768 rem
@@ -13,10 +33,9 @@
 
 html{
     font-size: 100px;
-    text-rendering: optimizeLegibility;
 }
 html,body{  
-    font-family:"Microsoft JhengHei","Microsoft YaHei","微软雅黑",sans-serif;    
+    font-family:Helvetica,Arial,"Hiragino Sans GB","Hiragino Sans GB W3",Microsoft JhengHei,WenQuanYi Micro Hei,"Microsoft YaHei",sans-serif;    
     background-color: white;
     height: 100%;
     margin: 0 0;  
@@ -86,6 +105,7 @@ body{
     transition: transform 0.2s;
 }
 #navigation ul{
+
     display: flex;
     height: 1.20rem;
     flex-direction: row;
@@ -112,7 +132,6 @@ body{
     display: flex;
     padding-top: 0.40rem;
     flex-direction: column;
-    
     align-items: center;
 }
 
@@ -144,15 +163,41 @@ body{
     color: white;
 }
 
-
 /* height: 350rem;*/
-#allContext{
-    margin-top: 1.20rem;
-    background-color:rgb(255, 255, 255); 
 
+#allContext{
+    margin-top: 1.2rem;
+    background-color:rgb(255, 255, 255);
 }
 
 
+
+@keyframes logo_other{
+from{opacity: 0;}
+to{opacity: 1;}
+}
+
+#logo_other{
+    opacity: 1;
+    position: absolute;
+    right: 0;
+    animation: logo_other 0.6s;
+    z-index: 100;
+    margin-top: -1.48rem;
+    display: block;
+    transform: scale(0.5, 0.5);
+    
+}
+#logo_other > span:nth-child(1){
+    font-size: .4rem;
+    font-weight: bold;
+}
+#logo_other > span:nth-child(2){
+    font-size: 0.3rem;
+    font-weight: lighter;
+    display: block;
+    color: #e7e7e7;
+}
 /*---------首页动画+内容--------------*/
 #h{
     height: 100%;
@@ -194,7 +239,7 @@ margin-top: 0.12rem;
     position: absolute;
 }
 
-#logo::after{
+#img::after{
     display: block;
     position: absolute;
     content: '';
@@ -208,7 +253,6 @@ margin-top: 0.12rem;
     font-size: 0.16rem;
 }
 #name{
-    margin-top: 0.24rem;
     font-weight: bold;
 }
 #year{
@@ -518,15 +562,6 @@ margin-top: 0.12rem;
 }
 /**/
 /**/
-#allContext{
-    opacity: 0;
-    animation: opacityTwo ease 1s;
-    animation-fill-mode: forwards;
-}
-@keyframes opacityTwo{
-    from{opacity: 0}
-    to{opacity: 1}
-}
 
 
 /*eassay 随笔----------------*/
@@ -544,15 +579,15 @@ margin-top: 0.12rem;
     background-color: white;
 }
 #essayLeft{
-   /* padding-left:0.96rem;*/
-    width: 7.20rem;
+   /* padding-left:0.96rem;*/ 
+   width: 7.2rem;
+
 }
 #essayLeft li{
     font-size: 0.14rem;
     list-style: none; 
-    padding-bottom: 0.28rem;
-    border-bottom: 0.01rem solid rgba(0, 0, 0, 0.03);
-    margin-bottom:0.30rem;
+    padding-bottom: 0.5rem;
+    margin-bottom:0.5rem;
     
 }
 
@@ -561,10 +596,11 @@ margin-top: 0.12rem;
 }
 #essayLeft > ul > li{
     display: flex;
+    flex-flow: column-reverse;
 }
 #essayLeft > ul > li h3{
     line-height: .28rem;
-    margin-top: 0.3em;
+    margin-top: 0.6em;
     margin-bottom: 0em;
 }
 #essayLeft > ul > li:hover h3 {
@@ -578,10 +614,10 @@ margin-top: 0.12rem;
 }
 
 #essayLeft > ul:nth-child(1) > li:nth-child(1){
-    margin-top: 0.40rem;
+    margin-top: 0.0rem;
 }
 .essay-title {
-    font-size:0.24rem;
+    font-size:0.28rem;
     letter-spacing:0rem;
     cursor: pointer;
     margin-top: 0;
@@ -603,6 +639,7 @@ margin-top: 0.12rem;
 .essay-context{
     width: 6.80rem;
     margin-top: 0.20rem;
+    margin-bottom: .2rem
 }
 #essayText > div > h3.essay-title{
     margin-top: 0.30rem;
@@ -618,10 +655,10 @@ margin-top: 0.12rem;
 .preview-img{
     background-size:cover;
     background-color: red;
-    margin-right: 0.40rem;
-    min-width:3.40rem;
-    height: 1.20rem;
+    min-width:7.2rem;
+    height: 2rem;
     background-position: center; 
+    margin-top: .2rem;
 }
 .summary{
     display: none;
@@ -663,7 +700,10 @@ margin-top: 0.12rem;
     margin-left: 0.20rem;
     width: 1.60rem;
 }
-
+._tags > em {
+    margin-right: .05rem;
+    color: #0cb691;
+}
 
 
 ._updated{
@@ -691,10 +731,11 @@ margin-top: 0.12rem;
 #essayRight{
     display: none;
     position: fixed;
-    width: 1.96rem;
+    width: 3rem;
     height: 4.00rem;
     background-color: #f7f7f7;
     margin-left: 8.60rem;
+    top: 2rem
 }
 
 #essayText {
@@ -704,12 +745,14 @@ margin-top: 0.12rem;
     z-index: 4;
     display: flex;
     flex-direction: row-reverse;
-    font-size: 0.18rem;
-    font-weight: lighter;
+    font-size: 0.2rem;
     justify-content: center;
+    margin-bottom: .2rem;
    
 }
-
+ div.essay-context > p{
+    color:rgb(90, 90, 90);
+}
 #essayText h3{
     margin-top: 2.4em;
 }
@@ -777,55 +820,54 @@ margin-top: 0.12rem;
     #gallery{ column-count: 4!important;}
 }
 @media screen and (min-width: 1800px){
-    #gallery{ column-count: 5!important;}
+    #gallery{ column-count:5!important;}
 }
+
 #gallery{
     min-height: 3.45rem;
     background-color: rgb(255, 255, 255);
-    display: block;
     flex-direction: row;
     flex-wrap: wrap;
     font-size: 0;
     max-width: 2000px;
     min-width: 10.92rem;
-    padding-top: 0.2rem;
+    padding-top: 0.3rem;
     position: absolute;
     column-count: 3;
-    column-gap: 20px;
+    column-gap: 0px;
+    padding-bottom: 0.5rem;
+    transform: translateY(0);
+    transition: transform 0.3s;
 }
 .gallery-preview{
     outline: none!important;
     width: 100%;
-    
+    display: inline-block;
 }
 .gallery-link{
-    cursor: zoom-in;
     display:inline-block;
-    margin-bottom: 20px;
     position: relative;
-    box-shadow: 0 0 0px 1px #f6f6f6;
+    animation: gallery-overlay 0.4s;
 }
-.gallery-overlay{
-    display: block;
-    background-color: rgba(0, 0, 0, 0.445);
-    height: 100%;
-    width: 100%;
-    opacity: 0;
-    transition: opacity 0.2s;
-    position: absolute;
-}
-.gallery-link:hover > div.gallery-overlay{
-    opacity: 1;
+.gallery-none{
+    display: none!important;
 }
 
-.gallery-text{
-    color: white;
-    display: block;
-    height: 20px;
-    font-size: 20px;
-    font-weight: lighter;
-    padding: .40rem .40rem;
-    text-align: left;
+@keyframes gallery-overlay{
+    from{opacity: 0;}
+    to{opacity: 1;}
+}
+.gallery-overlay{ 
+    color: rgb(255, 255, 255);
+    display: none;
+    background-color: #181818d3;
+    height: 100%;
+    width: 100%;
+    opacity: 1;
+    animation: gallery-overlay 0.4s;
+    position: absolute;
+
+
 }
 
 .gallery-num{
@@ -836,6 +878,67 @@ margin-top: 0.12rem;
     position: absolute;
     font-size: 14px;
     color: #ffffffb3;
-    padding: 4px 4px;
+    padding: .04rem .04rem;
     text-align: center;
+}
+
+
+.gallery-title,.gallery-tags,.gallery-description{
+    padding: 0 .1rem;
+}
+.gallery-title{
+    margin:.4rem .2rem .2rem .2rem;
+    font-size: 22px;
+    text-align: left;
+}
+
+.gallery-description{
+    display: none;
+    font-size:22px;
+    text-align: left;
+    font-weight: lighter;
+}
+
+.gallery-tags{
+ 
+}
+.gallery-tag{
+    color: white;
+    font-size: 16px; 
+    padding: 6px 6px;
+    margin: 4px 4px;
+    border: 1px solid rgba(221, 221, 221, 0.17);
+    border-radius: 5px;
+}
+
+.gallery-tag:hover{
+    background-color:#ff990180;
+}
+.gallery-tag > em {
+    padding: 2px 2px;  
+}
+
+.gallery-toggle-tags{
+    font-size: 16px;
+    margin-top: -.8rem;
+    position: absolute;
+    
+}
+
+.toggle-tag{
+    color:rgb(162, 162, 162);
+    font-size: 16px; 
+    padding: 6px 6px;
+    margin: 4px 4px;
+    border: 1px solid rgb(221, 221, 221);
+    border-radius: 5px;
+   
+}
+.toggle-tag > em{
+    color: #0cb691;
+    margin-right: .05rem;
+}
+
+.toggle-tag > .c{
+
 }

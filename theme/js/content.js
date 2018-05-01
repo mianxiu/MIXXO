@@ -39,6 +39,9 @@ let writeContent = function () {
         switch (type) {
             case 'on':
                 $('#index').style.display = 'none'
+                $('#logo_other').style.display = 'block'
+                $('#allContext').style.marginTop = '1.2rem'
+                $('#background-box').style.display = 'none'
                 mp3PlayerType('min')
                 navHidden('on')
                 break;
@@ -56,6 +59,8 @@ let writeContent = function () {
             break;
         case 'gallery':
             hidden('on')
+            gallery_overlay()
+            gallery_tag()
             break;
         case 'essay':
             hidden('on')
@@ -170,29 +175,6 @@ function triangle() {
     G = triangleAndGetData('#gray', [[47, 73, 176, 297, 377, 209], '#f2f2f2', 'fill', 'none', 0, [0, 0]])
 
 
-    /**
-     * 输入数组[],返回一个随机数组
-     * randomNum-[min,max]
-     * @param {array} array 
-     * @param {array} randomNum
-     */
-    function getRandom(array, randomNum) {
-        /**
-     * -输入区间，返回随机数
-     * @param {*} min 
-     * @param {*} max 
-     */
-        function getRandomArbitrary(min, max) {
-            return Math.random() * (max - min) + min;
-        }
-
-        let a_ = []
-        for (let i = 0; i < array.length; i++) {
-            a_.push(array[i] + getRandomArbitrary(randomNum[0], randomNum[1]) * 20)
-        }
-
-        return a_
-    }
 
 
     //1稍微的不规则移动点
@@ -343,8 +325,6 @@ function mp3PlayerType(type) {
 function essayAjax() {
     let originScroll = 0
     $('#essayLeft').addEventListener('click', e => {
-        console.log(e.target)
-        console.log(e.target.parentNode.children)
         if (e.target.tagName === 'H3') {
 
             let eP = e.target.parentNode
@@ -371,8 +351,8 @@ function essayAjax() {
         $('#essayText>div').innerHTML = this.responseText
         $('#essayClose').style.transform = 'scale(1,1)'
         $('#main').style = 'display:flex;justify-content:center;height:100vh;'
-        $('title').innerText = decodeURI(window.location.href.split(/\//)[7])+" | Mianxiu's blog"
-
+        $('title').innerText = decodeURI(window.location.href.split(/\//)[7]) + " | Mianxiu's blog"
+        $('#logo_other').style.display = 'none'
         $('#essayClose').addEventListener('click', () => {
             history.pushState(null, "mianxiu's blog", '/')
             $('#essayClose').style.transform = ''
@@ -382,6 +362,7 @@ function essayAjax() {
             $('#essayText>div').innerHTML = ''
             $('#main').style = ''
             $('title').innerText = "Mianxiu's blog"
+            $('#logo_other').style.display = ''
             document.documentElement.scrollTop = originScroll
         })
     }
@@ -410,5 +391,82 @@ function essayAjax() {
 
 window.addEventListener('popstate', (e) => {
     var currentState = history.state;
-    console.log(e)
 })
+
+
+// 返回首页
+function logo_other() {
+    $('#logo_other').addEventListener('click', () => {
+        $('#rule').innerHTML = ''
+        $('#index').style.display = 'block'
+        $('#background-box').style.display = 'block'
+        mp3PlayerType('normal')
+        navHidden('off')
+        triangle()
+    })
+}
+
+
+
+//  画廊遮罩层
+function gallery_overlay() {
+    // css hover冒泡有时无效
+    $('#gallery').addEventListener('mouseenter', () => {
+        console.log('222')
+        for (let i = 0; i < $All('.gallery-link').length; i++) {
+            $All('.gallery-link')[i].addEventListener('mouseenter', event => {
+                event.target.children[0].style.display = 'block'
+            })
+            $All('.gallery-link')[i].addEventListener('mouseleave', event => {
+                event.target.children[0].style.display = 'none'
+            })
+        }
+    })
+}
+
+function gallery_tag() {
+    // match tags
+    let g = $('.gallery-toggle-tags')
+    for (let el of $All('.gallery-link')) {
+        el.addEventListener('click', event => {
+            let toggleTag = function (elInnerText) {
+                // elInnertext is .gallery-tag's innertext
+                for (let e of $All('.gallery-link')) {
+                    if (!new RegExp(elInnerText, 'gm').test(e.getAttribute('data-tag'))) {
+                        e.classList.add('gallery-none')
+                    }
+                }
+                if (!new RegExp(elInnerText, 'gm').test(g.getAttribute('data-toggle-tag'))) {
+                    $('#gallery').style.transform = 'translateY(.5rem)'
+                    g.innerHTML += '<span class="toggle-tag"><em>#</em>' + elInnerText.replace(/#/, '') + '<span class="c"></span></span>'
+                    g.setAttribute('data-toggle-tag', g.getAttribute('data-toggle-tag') + elInnerText)
+                }
+            }
+
+            if (event.target.className === 'gallery-tag') {
+                // 筛选tag
+                toggleTag(event.target.innerText)
+
+            } else if (event.target.tagName === 'EM') {
+                toggleTag(event.target.parentNode.innerText)
+            }
+        })
+    }
+
+    // toggle tags
+    g.addEventListener('click', event => {
+        if (event.target.className === 'toggle-tag') {
+            g.setAttribute('data-toggle-tag', g.getAttribute('data-toggle-tag').replace(new RegExp(event.target.innerText, 'gm'), ''))
+            for (let e of $All('.gallery-link')) {
+                if (new RegExp(g.getAttribute('data-toggle-tag'), 'gm').test(e.getAttribute('data-tag')) || g.getAttribute('data-toggle-tag') === 'undefined') {
+                    e.classList.remove('gallery-none')
+                }
+            }
+            event.target.remove()
+            if (g.getAttribute('data-toggle-tag') === '') {
+                $('#gallery').style = ''
+            }
+        }
+    })
+
+}

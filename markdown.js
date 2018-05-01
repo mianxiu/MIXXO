@@ -10,7 +10,7 @@ function frontMatter(fromTags, imageTag) {
     [/^banner:.*/m, ['<div class="_banner" style="background-image:url(\'' + imageTag + '_', '\');"></div>']],
     [/^title:.*/m, ['<h3 class="essay-title">', '</h3>']],
     [/^date:.*/m, ['<span class="_date">', '</span>']],
-    [/^tags:.*/m, ['<span class="_tags">', '</span>']],
+    [/^tags:.*/m, ['<span class="_tags"><em>#</em>', '</span>']],
     [/^updated:.*/m, ['<span class="_updated">', '</span>']]
   ]
 

@@ -28,29 +28,20 @@
             <div class="nav-block"></div>
             <ul>
                 <li>
-                    <a class="nav-active">HOME</a>
-                    <div class="nav-span" style="opacity:1;margin-top:.10rem">首页</div>
-                </li>
-                <li>
                     <a>GALLERY</a>
                     <div class="nav-span">东西</div>
-                </li>
-                <li>
-                    <a>CODE</a>
-                    <div class="nav-span">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; GAME();
-                    </div>
                 </li>
                 <li>
                     <a>ESSAY</a>
                     <div class="nav-span">随笔</div>
                 </li>
-                <li>
-                    <a>ABOUT</a>
-                    <div class="nav-span">关于</div>
-                </li>
             </ul>
         </nav>
         <div id="allContext">
+        <div id="logo_other">
+               <span >MIANXIU</span>
+               <span>'S BLOG</span>        
+            </div>
             <div id="index">
                 <div id="Personal">
                     <div id="logo">

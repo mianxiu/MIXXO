@@ -1,0 +1,15 @@
+<div class="gallery-link" data-tag="<%-dataTag-%>">
+    <div class="gallery-overlay">
+        <h3 class="gallery-title">
+            <%-galleryTitle-%>
+        </h3>
+        <p class="gallery-description">
+            <%-galleryDescription-%>
+        </p>
+        <div class="gallery-tags">
+            <%-galleryTag-%>
+        </div>
+    </div>
+    <span class="gallery-num"><%-galleryNum-%></span>
+    <img class="gallery-preview" src="<%-galleryPreview-%>">
+</div>
