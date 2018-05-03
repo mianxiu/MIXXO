@@ -1,0 +1,4 @@
+<div class="gallery-imgs">
+<div></div>
+<%-galleryImgs-%>
+</div>

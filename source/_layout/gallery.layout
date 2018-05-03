@@ -1,4 +1,4 @@
-<div class="gallery-link" data-tag="<%-dataTag-%>">
+<div class="gallery-link" data-tag="<%-dataTag-%>" data-href="<%-dataHref-%>">
     <div class="gallery-overlay">
         <h3 class="gallery-title">
             <%-galleryTitle-%>

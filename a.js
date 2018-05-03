@@ -236,46 +236,53 @@ function pushGallery() {
 
   // 复制
   const layout_dataTag = /<%-dataTag-%>/gm
+  const layout_dataHref = /<%-dataHref-%>/gm
   const layout_title = /<%-galleryTitle-%>/gm
   const layout_description = /<%-galleryDescription-%>/gm
   const layout_tag = /<%-galleryTag-%>/gm
   const layout_num = /<%-galleryNum-%>/gm
   const layout_banner = /<%-galleryPreview-%>/gm
 
-  let gallery_context = ''
+  let gallery_index= ''
   dir.forEach(formPath => {
     let birthtime = fs.statSync(formPath).birthtime
     let year = birthtime.getFullYear()
     let month = birthtime.getMonth() + 1 < 10 ? '0' + (birthtime.getMonth() + 1) : birthtime.getMonth() + 1
-    let date = birthtime.getDate()
+    let date = birthtime.getDate() < 10 ? '0' + birthtime.getDate() : birthtime.getDate()
 
     let dir_name = formPath.split('/')[4]
     let dir_path = _gallery_toPath + '/' + year + '/' + month + '/' + date + '/' + dir_name + '/'
 
     dirSync.createDirs(dir_path)
-    // 复制图片
+    // 复制图片 && 写入context.html
+    let gallery_context = ''
     dirSync.loop(formPath, 'file').forEach(e => {
-      if(!/info\.json/gm.test(e)){
+      if (!/info\.json/gm.test(e)) {
+        gallery_context += '<img class=\"gallery-img\" src=\"./' + e.split('/').pop() + '">'
         fs.writeFileSync(dir_path + e.split('/').pop(), fs.readFileSync(e))
       }
     })
+
+    let layout_galleryImgs = /<%-galleryImgs-%>/gm
+    fs.writeFileSync(dir_path + '/context.html', fs.readFileSync('./source/_layout/galleryContext.layout','utf-8').replace(layout_galleryImgs,gallery_context))
 
     // 读取info
     let info = JSON.parse(fs.readFileSync(formPath + '/info.json', 'utf-8'))
     let layout = fs.readFileSync('./source/_layout/gallery.layout', 'utf-8')
     let galleryTag = ''
-    info.tag.split(/#/).forEach(e=>{
-      galleryTag += e !=='' ? '<span class="gallery-tag"><em>#</em>'+ e + '</span>' : e 
+    info.tag.split(/#/).forEach(e => {
+      galleryTag += e !== '' ? '<span class="gallery-tag"><em>#</em>' + e + '</span>' : e
     })
 
-    gallery_context += layout.replace(layout_dataTag, info.tag)
+    gallery_index += layout.replace(layout_dataTag, info.tag)
+      .replace(layout_dataHref,'gallery/' + year + '/' + month + '/' + date + '/' + dir_name)
       .replace(layout_title, dir_name)
       .replace(layout_description, info.description)
-      .replace(layout_tag,galleryTag)
+      .replace(layout_tag, galleryTag)
       .replace(layout_num, 12)
       .replace(layout_banner, dir_path.replace(/\.\/public/, '.') + info.banner)
   })
 
-  fs.writeFileSync( _gallery_toPath + '/index.html','<div id="gallery"><div class="gallery-toggle-tags" data-toggle-tag=""></div>'+gallery_context+'</div>')
+  fs.writeFileSync(_gallery_toPath + '/index.html', '<div id="gallery"><div class="gallery-toggle-tags" data-toggle-tag=""></div>' + gallery_index + '</div>')
 }
 pushGallery()
