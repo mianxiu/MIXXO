@@ -57,7 +57,7 @@ function cover(fromText, imageTag) {
   }
 
   img = /\!\[\]\(.+?\)|\!\[.+?\]\(.+?\)/
-  link = /\[(?!<a).+?\]\((?!<a).+[^]]?\)(?!\])/
+  link = /\[(?!<a).+?\]\((?!<a).+?[^]]?\)(?!\])/
   ul = /^\- .+\r\n/m
   ol = /^\d+\. .+\r\n/m
   del = /~~.+?~~/m
@@ -102,14 +102,7 @@ function cover(fromText, imageTag) {
     }
     _toLine(result)
 
-    let _toLink = function (e) {
-      if (link.test(e)) {
-        let i = e.match(link)[0].split('](')
-        result = e.replace(link, '<a href="' + i[1].slice(0, -1) + '" target="_blank">' + i[0].slice(1) + '</a>')
-        _toLink(result)
-      }
-    }
-    _toLink(result)
+   
 
     let _toList = function (e) {
       let _toUl = function (e) {
@@ -137,6 +130,15 @@ function cover(fromText, imageTag) {
     _toList(result)
 
 
+    let _toLink = function (e) {
+      if (link.test(e)) {
+        let i = e.match(link)[0].split('](')
+        result = e.replace(link, '<a href="' + i[1].slice(0, -1) + '" target="_blank">' + i[0].slice(1) + '</a>')
+        _toLink(result)
+      }
+    }
+    _toLink(result)
+    // 
 
     
     let _toList2 = function (e) {
@@ -201,9 +203,9 @@ function cover(fromText, imageTag) {
         let p = e.match(/^```$/gm)
         for (let i = 1; i < p.length + 1; i++) {
           if (i % 2 !== 0) {
-            result = result.replace(codePre, '<pre>')
+            result = result.replace(codePre, '<pre><code>')
           } else {
-            result = result.replace(codePre, '</pre>')
+            result = result.replace(codePre, '</code></pre>')
           }
         }
       } 
@@ -214,7 +216,7 @@ function cover(fromText, imageTag) {
     let _toCode = function (e) {
       if (code.test(e)) {
         e.match(code).forEach(c => {
-          result = result.replace(c, '<code>' + c.slice(1, -1) + '</code>')
+          result = result.replace(c, '<code class="code">' + c.slice(1, -1) + '</code>')
         })
       }
     }
@@ -233,7 +235,6 @@ function cover(fromText, imageTag) {
     }
     _toYoutube(result)
 
-    // 
     let _toAnother = function (e) {
       let r = ''
       e.split('\r\n').forEach(el => {
@@ -242,7 +243,7 @@ function cover(fromText, imageTag) {
         }
       })
 
-      let pre = /<pre>.+?<\/pre>/mg
+      let pre = /<pre><code>.+?<\/code><\/pre>/mg
       let preAry = []
       if(pre.test(r)){
         r.match(pre).forEach(e => {
@@ -272,9 +273,9 @@ function cover(fromText, imageTag) {
       
 
       preAry.forEach(e => {
-        r = r.replace(/\<%-pre-%\>/, '<pre>'
-          + e.slice(5, -6).replace(/<(?!%)/g, '&lt;')
-          + '</pre>')
+        r = r.replace(/\<%-pre-%\>/, '<pre><code>'
+          + e.slice(11, -13).replace(/<(?!%)/g, '&lt;')
+          + '</code></pre>')
         r = r.replace(/\<%-br-%\>/g, '\r\n')
       })
       result = r

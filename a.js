@@ -243,7 +243,7 @@ function pushGallery() {
   const layout_num = /<%-galleryNum-%>/gm
   const layout_banner = /<%-galleryPreview-%>/gm
 
-  let gallery_index= ''
+  let gallery_index = ''
   dir.forEach(formPath => {
     let birthtime = fs.statSync(formPath).birthtime
     let year = birthtime.getFullYear()
@@ -263,23 +263,31 @@ function pushGallery() {
       }
     })
 
-    let layout_galleryImgs = /<%-galleryImgs-%>/gm
-    fs.writeFileSync(dir_path + '/context.html', fs.readFileSync('./source/_layout/galleryContext.layout','utf-8').replace(layout_galleryImgs,gallery_context))
-
     // 读取info
     let info = JSON.parse(fs.readFileSync(formPath + '/info.json', 'utf-8'))
-    let layout = fs.readFileSync('./source/_layout/gallery.layout', 'utf-8')
     let galleryTag = ''
     info.tag.split(/#/).forEach(e => {
       galleryTag += e !== '' ? '<span class="gallery-tag"><em>#</em>' + e + '</span>' : e
     })
 
-    gallery_index += layout.replace(layout_dataTag, info.tag)
-      .replace(layout_dataHref,'gallery/' + year + '/' + month + '/' + date + '/' + dir_name)
+
+    let layout_galleryImgs = /<%-galleryImgs-%>/gm
+    fs.writeFileSync(dir_path + '/context.html', fs.readFileSync('./source/_layout/galleryContext.layout', 'utf-8')
+      .replace(layout_galleryImgs, gallery_context)
       .replace(layout_title, dir_name)
       .replace(layout_description, info.description)
       .replace(layout_tag, galleryTag)
-      .replace(layout_num, 12)
+    )
+
+
+    
+    let layout = fs.readFileSync('./source/_layout/gallery.layout', 'utf-8')
+
+    gallery_index += layout.replace(layout_dataTag, info.tag)
+      .replace(layout_dataHref, 'gallery/' + year + '/' + month + '/' + date + '/' + dir_name)
+      .replace(layout_title, dir_name)
+      .replace(layout_description, info.description)
+      .replace(layout_tag, galleryTag)
       .replace(layout_banner, dir_path.replace(/\.\/public/, '.') + info.banner)
   })
 
