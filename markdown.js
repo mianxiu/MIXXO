@@ -8,7 +8,7 @@ function frontMatter(fromTags, imageTag) {
   //标签匹配正则
   let reg = [
     [/^banner:.*/m, ['<div class="_banner" style="background-image:url(\'' + imageTag + '_', '\');"></div>']],
-    [/^title:.*/m, ['<h3 class="essay-title">', '</h3>']],
+    [/^title:.*/m, ['<h1 class="essay-title">', '</h1>']],
     [/^date:.*/m, ['<span class="_date">', '</span>']],
     [/^tags:.*/m, ['<span class="_tags"><em>#</em>', '</span>']],
     [/^updated:.*/m, ['<span class="_updated">', '</span>']]
@@ -30,8 +30,8 @@ function frontMatter(fromTags, imageTag) {
   let options = {
     year: "numeric", month: "short",
     day: "numeric"
-}
-  m = m.replace(dateRegex,new Date(m.match(dateRegex)[0].replace(/\//,',')).toLocaleTimeString('en-us',options).replace(/, 12:00:00 AM/gm,''))
+  }
+  m = m.replace(dateRegex, new Date(m.match(dateRegex)[0].replace(/\//, ',')).toLocaleTimeString('en-us', options).replace(/, 12:00:00 AM/gm, ''))
   return m
 }
 
@@ -58,6 +58,10 @@ function cover(fromText, imageTag) {
 
   img = /\!\[\]\(.+?\)|\!\[.+?\]\(.+?\)/
   link = /\[(?!<a).+?\]\((?!<a).+?[^]]?\)(?!\])/
+  footNote = {
+    'fn': /\[\^.+?\](?!:)/,
+    'fnref': /\[\^.+?\]:/
+  }
   ul = /^\- .+\r\n/m
   ol = /^\d+\. .+\r\n/m
   del = /~~.+?~~/m
@@ -70,9 +74,8 @@ function cover(fromText, imageTag) {
   p = /^(?!<[^a])[^\r\n].*/gm
   line = /^\*\*\*+$|^\-\-\-+$|^\_\_\_+$/gm
 
-
   let loop = function (text) {
-
+    // 标题
     let _heading = function (e) {
       for (const i in heading) {
         let r = new RegExp(heading[i], 'm')
@@ -85,7 +88,7 @@ function cover(fromText, imageTag) {
     }
     _heading(text)
 
-
+    // 图片
     let _toImg = function (e) {
       if (img.test(e)) {
         let i = e.match(img)[0].split('](')
@@ -95,15 +98,17 @@ function cover(fromText, imageTag) {
     }
     _toImg(result)
 
-    let _toLine = function(e){
-      if(line.test(e)){
-        result = e.replace(line,'<hr color="#f9f9f9">')
+    // 分隔线
+    let _toLine = function (e) {
+      if (line.test(e)) {
+        result = e.replace(line, '<hr color="#f9f9f9">')
       }
     }
     _toLine(result)
 
-   
 
+
+    // 无序列表
     let _toList = function (e) {
       let _toUl = function (e) {
         if (ul.test(e)) {
@@ -130,6 +135,46 @@ function cover(fromText, imageTag) {
     _toList(result)
 
 
+    
+    // 脚注
+    let footNum = 0;
+    let _tofootNote = function (e) {
+      if (footNote.fn.test(e)) {
+          let reg = function (match) {
+            let r = {
+              '^': '\\^',
+              '[': '\\[',
+              ']': '\\]'
+            }
+            return r[match]
+          }
+          let a = e.match(footNote.fn)[0]
+          let f = new RegExp(a.replace(/\[|\]|\^/g, reg))
+          let l = e.match(/\[\^.+?\](?!:)/g).length
+          let y = a.slice(2, -1)
+          result = e.replace(f, '<sup class="foot-note"><a href="#fn-' + y + '" id="fnref-' + y + '">' + y + '</a></sup>')
+          
+          if (footNote.fnref.test(e)) {
+            let b = new RegExp(e.match(footNote.fnref)[0].replace(/\[|\]|\^/g, reg) + '.+')
+            let c = e.match(b)[0].split(/]:/)[0]
+            let d = e.match(b)[0].split(/]:/)[1]
+            let g =  c.slice(2)
+            if (footNum < 1) {
+              result = e.replace(b, '<ol class="fn-ol"><li id="fn-' + g + '">' + d + '<a class="fnref" href="#fnref-' + g + '">↩</a></li>')
+            }
+            else {
+              result = e.replace(b, '<li id="fn-' + g + '">' + d + '<a class="fnref" href="#fnref-' + g + '">↩</a></li>')
+            } 
+          }
+          footNum +=1
+          _tofootNote(result)
+        }
+    }
+    
+    _tofootNote(result)
+    
+
+    // 链接
     let _toLink = function (e) {
       if (link.test(e)) {
         let i = e.match(link)[0].split('](')
@@ -138,9 +183,11 @@ function cover(fromText, imageTag) {
       }
     }
     _toLink(result)
-    // 
 
-    
+
+
+
+    // 有序列表
     let _toList2 = function (e) {
       let _toOl = function (e) {
         if (ol.test(e)) {
@@ -166,6 +213,7 @@ function cover(fromText, imageTag) {
     }
     _toList2(result)
 
+    // 删除线
     let _toDel = function (e) {
       if (del.test(result)) {
         result = result.replace(del, '<s>' + result.match(del)[0].slice(2, -2) + '</s>')
@@ -174,6 +222,7 @@ function cover(fromText, imageTag) {
     }
     _toDel(result)
 
+    //  加粗
     let _toBold = function (e) {
       if (blod.test(result)) {
         result = result.replace(blod, '<b>' + result.match(blod)[0].slice(2, -2) + '</b>')
@@ -182,6 +231,8 @@ function cover(fromText, imageTag) {
     }
     _toBold(result)
 
+
+    // 斜体
     let _toItalics = function (e) {
       if (italics.test(result)) {
         result = result.replace(italics, '<em>' + result.match(italics)[0].slice(1, -1) + '</em>')
@@ -190,16 +241,18 @@ function cover(fromText, imageTag) {
     }
     _toItalics(result)
 
+    // 引用
     let _toBlockQuote = function (e) {
       if (blockquote.test(e)) {
-        result = result.replace(blockquote, '<blockquote>' + e.match(blockquote)[0] + '</blockquote>')
+        result = result.replace(blockquote, '<blockquote>' + e.match(blockquote)[0].slice(1) + '</blockquote>')
         _toBlockQuote(result)
       }
     }
     _toBlockQuote(result)
 
+    // 代码块
     let _toCodePre = function (e) {
-      if(codePre.test(e)){
+      if (codePre.test(e)) {
         let p = e.match(/^```$/gm)
         for (let i = 1; i < p.length + 1; i++) {
           if (i % 2 !== 0) {
@@ -208,11 +261,12 @@ function cover(fromText, imageTag) {
             result = result.replace(codePre, '</code></pre>')
           }
         }
-      } 
+      }
     }
     _toCodePre(result)
 
 
+    // 代码单字
     let _toCode = function (e) {
       if (code.test(e)) {
         e.match(code).forEach(c => {
@@ -235,6 +289,7 @@ function cover(fromText, imageTag) {
     }
     _toYoutube(result)
 
+    // 
     let _toAnother = function (e) {
       let r = ''
       e.split('\r\n').forEach(el => {
@@ -245,14 +300,14 @@ function cover(fromText, imageTag) {
 
       let pre = /<pre><code>.+?<\/code><\/pre>/mg
       let preAry = []
-      if(pre.test(r)){
+      if (pre.test(r)) {
         r.match(pre).forEach(e => {
           preAry.push(e)
         })
       }
-      
-      
-      
+
+
+      // 转段落
       r = r.replace(new RegExp(pre), '<%-pre-%>')
       r = r.replace(/\<%-br-%\>/g, '\r\n')
       let _toP = function (e) {
@@ -270,7 +325,7 @@ function cover(fromText, imageTag) {
       }
       _toP(r)
 
-      
+
 
       preAry.forEach(e => {
         r = r.replace(/\<%-pre-%\>/, '<pre><code>'

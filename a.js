@@ -89,7 +89,7 @@ function pages() {
   let r
   let b, h, s, p
   b = /<div class="_banner" style="background-image:url\(.+?\)/gm
-  h = /<h3.*/
+  h = /<h1.*/
   s = /<span.*/gm
   p = /<p.*/m //摘要
   for (let i = 0; i < publicEssayFilePath.length; i++) {
