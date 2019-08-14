@@ -1,0 +1,115 @@
+#foot{
+    position: fixed;
+    left: 0;
+    top: 0;
+    transform: translateY(5rem);
+}
+#mp3Player{
+   margin-top: .54rem;
+   animation: mp3Player ease-in-out 0.5s;
+   opacity: 1;
+   background-color: white;
+}
+
+@keyframes mp3Player{
+    from{opacity: 0}
+    to{opacity: 1}
+}
+#visual{
+    z-index: 2;
+    transform: scale(0.4,0.4);
+    position: absolute;
+    margin-top: -.32rem;
+    margin-left: 3.60rem;
+}
+
+#ToShow,#lineTo,#playCtrShade,#timePass{
+    display: none;
+    font-size: 0px;
+}
+#playCtr{
+    z-index: 1;
+    position: absolute;
+    margin-top: .16rem;
+    left: .20rem;
+    width: .50rem;
+    height: .50rem;
+    transform: scale(0.8,0.8);
+    cursor: pointer;
+    
+}
+
+/*hover动画*/
+
+/*进度条*/
+#progress{
+    position: absolute;
+    left: 0;
+    margin-top: .82rem;
+    width: .88rem;
+    height: .36rem;
+    overflow:hidden;
+    transition: width 0.2s;
+}
+
+#audioProgressA,#audioProgressB,#timePass{
+    position: absolute;
+}
+#audioProgressA{
+   
+    z-index: 1;
+    height: .06rem;
+    background-color: rgb(230,230,230)
+}
+
+
+#mp3Player:hover #VP{
+    width:4.86rem;
+}
+#VP{
+    overflow: hidden;
+    width: .16rem;
+    position: absolute;
+    left: 0;
+    padding:.14rem 0rem;
+    padding-left: .70rem;
+    border-top:.02rem solid black;
+    border-right:.02rem solid black;
+    border-bottom: .02rem solid black;
+    background-color: white;
+    transition: width 0.4s;
+}
+
+#playList{
+    border: 0rem solid royalblue;
+    text-overflow: clip;
+    overflow: hidden;
+    width: 4.56rem;
+    height: .50rem;
+}
+#playList::before{
+    display: block;
+    content: '';
+    position: absolute;
+    margin-top: .28rem;
+    width: 4.56rem;
+    height: .30rem;
+    background:linear-gradient(0deg,white,rgba(255,255,255,0.5));
+    transition: height 0.2s,margin-top 0.2s;   
+    
+}
+#playList ol {
+    list-style: none;
+    margin: 0 0;
+    transition:margin-top 0.2s;
+}
+
+#playList li{
+    font-weight: 400;
+    font-size: .16rem;
+    margin-bottom: .08rem;
+    
+}
+#playList li:hover{
+    cursor: pointer;
+}

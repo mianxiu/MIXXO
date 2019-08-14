@@ -1,0 +1,13 @@
+{
+    "_publicEssayPath":"./public/essay",
+    "_postEssayPath":"./source/_post/_essay/",
+    "repository":"mainxiu.github.io",
+    "blogName":"Mianxiu's Blog",
+    "sentence":"something was wrong...",
+
+    "imageHosting":{
+        "essay":"//img.mianxiu.me/image/essay/",
+        "essayPath":"./mianxiu.img/image/essay/"
+    }
+    
+}

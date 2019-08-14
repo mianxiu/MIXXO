@@ -1,0 +1,48 @@
+/**/
+h1{}
+h2{}
+h3{}
+h4{}
+a{
+    text-decoration-line: none;
+    color: #70a0db;
+    transition: color 0.2s;
+}
+a:hover{
+    color: #fcab1d;
+}
+code.code{
+    font-size: 16px;
+    background-color: #d4e7e9;
+    padding: 2px 8px;
+    color: #6da8d5;
+    border-radius: 2px;
+    font-family: 'sans serif';
+    font-weight: lighter;
+    margin: 0 6px;
+}
+
+pre{
+    padding:0.2rem 0.4rem .4rem .4rem!important;
+    border-radius: .12rem;
+    border: 1px solid #001939;
+    font-family: 'sans serif';
+    font-size: 18px;
+    white-space:pre-wrap;
+
+}
+
+pre > p {
+    padding: 0 10px;
+    margin: 0 0;
+    margin-top: -20px;
+    vertical-align: 0em;
+}
+blockquote {
+    margin: 0 0;
+    margin-bottom: 10px;
+    padding: 10px 10px;
+    border-left: 4px solid rebeccapurple;
+    background-color: #f9f9f9;
+    color:#929292;
+}

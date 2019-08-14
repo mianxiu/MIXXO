@@ -1,0 +1,6 @@
+<li>
+    <h3><%-h3-%></h3>
+    <span class="_Date"><%-_Date-%></span>
+    <span class="_Folder"><%-_Folder-%></span>
+    <p class="_summary"><%-summary-%></p>
+</li>
